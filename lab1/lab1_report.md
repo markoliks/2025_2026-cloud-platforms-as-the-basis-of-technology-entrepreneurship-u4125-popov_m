@@ -30,7 +30,7 @@ cloud-platforms-as-the-basis
 Для проверки активного проекта в Cloud Shell была выполнена команда:
 gcloud config get-value project
 Результат:
-cloud-platforms-as-the-basis
+cloud-platforms-as-the-basis```
 
 
 ⸻
