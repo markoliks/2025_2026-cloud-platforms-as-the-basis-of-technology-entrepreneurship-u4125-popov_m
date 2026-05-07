@@ -36,7 +36,7 @@ cloud-platforms-as-the-basis
 ⸻
 
 
-2. Создание service account
+### 2. Создание service account
 Был создан service account с именем:
 mpopov-sa-lab1
 Команда создания:
