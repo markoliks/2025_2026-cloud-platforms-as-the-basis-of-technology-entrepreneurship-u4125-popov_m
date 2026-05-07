@@ -30,8 +30,8 @@ cloud-platforms-as-the-basis
 Для проверки активного проекта в Cloud Shell была выполнена команда:
 gcloud config get-value project
 Результат:
-cloud-platforms-as-the-basis```
-
+cloud-platforms-as-the-basis
+```
 
 ⸻
 
@@ -40,6 +40,7 @@ cloud-platforms-as-the-basis```
 Был создан service account с именем:
 mpopov-sa-lab1
 Команда создания:
+```bash
 gcloud iam service-accounts create mpopov-sa-lab1 \
   --display-name="Mark Popov Lab1 Service Account"
 После создания service account был проверен командой:
@@ -48,14 +49,15 @@ gcloud iam service-accounts list --filter="email:mpopov-sa-lab1"
 DISPLAY NAME: Mark Popov Lab1 Service Account
 EMAIL: mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
 DISABLED: False
-
+```
 
 ⸻
 
 
-3. Назначение роли Storage Admin
+### 3. Назначение роли Storage Admin
 Созданному service account была назначена роль Storage Admin.
 Команда:
+```bash
 gcloud projects add-iam-policy-binding cloud-platforms-as-the-basis \
   --member="serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com" \
   --role="roles/storage.admin"
@@ -67,12 +69,12 @@ gcloud projects get-iam-policy cloud-platforms-as-the-basis \
 Результат:
 ROLE: roles/storage.admin
 MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
-
+```
 
 ⸻
 
 
-4. Создание виртуальной машины Compute Engine
+### 4. Создание виртуальной машины Compute Engine
 Была создана виртуальная машина с именем:
 mpopov-vm-lab1
 Параметры виртуальной машины:
@@ -82,6 +84,7 @@ Provisioning model: SPOT
 Image family: debian-12
 Service account: mpopov-sa-lab1
 Команда создания:
+```bash
 gcloud compute instances create mpopov-vm-lab1 \
   --zone=europe-west1-b \
   --machine-type=e2-micro \
@@ -99,13 +102,14 @@ ZONE: europe-west1-b
 MACHINE_TYPE: e2-micro
 PREEMPTIBLE: true
 STATUS: RUNNING
-
+```
 
 ⸻
 
 
-5. Подключение к виртуальной машине
+### 5. Подключение к виртуальной машине
 Для подключения к виртуальной машине была использована команда:
+```bash
 gcloud compute ssh mpopov-vm-lab1 --zone=europe-west1-b
 После подключения была выполнена проверка имени хоста:
 hostname
@@ -120,12 +124,11 @@ gcloud auth list
 Результат показал, что активной учетной записью является созданный service account:
 ACTIVE  ACCOUNT
 *       mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
-
+```
 
 ⸻
 
 
-Конечно. Вот текст с 6 пункта и до конца:
 ### 6. Копирование файлов из Cloud Storage при роли Storage Admin
 
 Внутри виртуальной машины был проверен доступ к bucket:
@@ -151,15 +154,17 @@ ls -la lab1-files
 pic1.jpg
 pic2.jpg
 pic3.jpeg
+```
 Таким образом, при наличии роли Storage Admin service account успешно получил доступ к bucket и смог скопировать файлы на виртуальную машину.
 
 
 ⸻
 
 
-7. Изменение роли service account
+### 7. Изменение роли service account
 После успешного копирования файлов роль Storage Admin была удалена у service account.
 Команда:
+```bash
 gcloud projects remove-iam-policy-binding cloud-platforms-as-the-basis \
   --member="serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com" \
   --role="roles/storage.admin"
@@ -175,13 +180,14 @@ gcloud projects get-iam-policy cloud-platforms-as-the-basis \
 Результат:
 ROLE: roles/compute.viewer
 MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
-
+```
 
 ⸻
 
 
-8. Повторное копирование файлов после смены роли
+### 8. Повторное копирование файлов после смены роли
 После смены роли было выполнено повторное подключение к виртуальной машине:
+```bash
 gcloud compute ssh mpopov-vm-lab1 --zone=europe-west1-b
 На виртуальной машине была создана новая папка:
 mkdir lab1-files-after-role-change
@@ -198,7 +204,9 @@ Copying gs://lab1-bucket-itmo/pic1.jpg...
 Copying gs://lab1-bucket-itmo/pic2.jpg...
 Copying gs://lab1-bucket-itmo/pic3.jpeg...
 Operation completed over 3 objects/1.5 MiB.
+```
 Так как копирование после смены роли тоже завершилось успешно, была выполнена дополнительная проверка ролей service account:
+```bash
 gcloud projects get-iam-policy cloud-platforms-as-the-basis \
   --flatten="bindings[].members" \
   --filter="bindings.members:mpopov-sa-lab1" \
@@ -206,21 +214,25 @@ gcloud projects get-iam-policy cloud-platforms-as-the-basis \
 Результат:
 ROLE: roles/compute.viewer
 MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+```
 Это подтвердило, что роль Storage Admin действительно была удалена, а у service account осталась роль Compute Viewer.
 Также была проверена IAM policy bucket:
+```bash
 gcloud storage buckets get-iam-policy gs://lab1-bucket-itmo
 В результате была найдена следующая запись:
 members:
 - allUsers
 role: roles/storage.objectViewer
+```
 Это означает, что объекты в bucket доступны для чтения всем пользователям. Поэтому после смены роли service account с Storage Admin на Compute Viewer доступ к объектам Cloud Storage не был потерян.
 
 
 ⸻
 
 
-9. Удаление созданных ресурсов
+### 9. Удаление созданных ресурсов
 После завершения лабораторной работы была удалена виртуальная машина:
+```bash
 gcloud compute instances delete mpopov-vm-lab1 --zone=europe-west1-b
 Проверка удаления:
 gcloud compute instances list --filter="name=mpopov-vm-lab1"
@@ -232,19 +244,36 @@ gcloud iam service-accounts delete mpopov-sa-lab1@cloud-platforms-as-the-basis.i
 gcloud iam service-accounts list --filter="email:mpopov-sa-lab1"
 Результат:
 Listed 0 items.
-
+```
 
 ⸻
 
 
-Вывод
+### Вывод
 В ходе лабораторной работы были изучены базовые сервисы Google Cloud: IAM, Compute Engine и Cloud Storage.
 Был создан service account mpopov-sa-lab1, которому сначала была назначена роль Storage Admin. Затем была создана виртуальная машина mpopov-vm-lab1 типа e2-micro в режиме Spot. Виртуальная машина была запущена с использованием созданного service account.
 При наличии роли Storage Admin удалось получить список объектов bucket lab1-bucket-itmo и скопировать три файла на виртуальную машину с помощью утилиты gsutil.
 После этого роль Storage Admin была удалена, а вместо нее была назначена роль Compute Viewer. Ожидалось, что после смены роли service account потеряет доступ к объектам Cloud Storage, так как роль Compute Viewer относится к просмотру ресурсов Compute Engine и не предоставляет прав на чтение объектов Cloud Storage.
 Однако повторное выполнение команд gsutil ls и gsutil cp также завершилось успешно. Для поиска причины была проверена IAM policy bucket lab1-bucket-itmo. В политике доступа была обнаружена запись:
 members:
-- allUsers
+allUsers
 role: roles/storage.objectViewer
 Это означает, что bucket доступен для чтения всем пользователям. Следовательно, доступ к объектам bucket предоставлялся не только через роль Storage Admin, назначенную service account, но и через публичную политику bucket. Именно поэтому после смены роли на Compute Viewer копирование файлов продолжило работать.
 В конце лабораторной работы все созданные ресурсы — виртуальная машина и service account — были удалены.
+
+### Скрины
+<img width="1214" height="294" alt="Скриншот 07-05-2026 181934" src="https://github.com/user-attachments/assets/076ea7ce-3b1b-4754-b853-ceda5dc2d676" />
+<img width="905" height="57" alt="Скриншот 07-05-2026 183534" src="https://github.com/user-attachments/assets/44b6f614-1666-4916-902e-cf4c2cf6dedb" />
+<img width="1223" height="190" alt="Скриншот 07-05-2026 185001" src="https://github.com/user-attachments/assets/8d978061-17f1-4b06-93c0-a37f36c35c68" />
+<img width="1205" height="257" alt="Скриншот 07-05-2026 184851" src="https://github.com/user-attachments/assets/8a8a9e20-0e94-4efb-8323-fe1db5b507e5" />
+<img width="851" height="583" alt="Скриншот 07-05-2026 184649" src="https://github.com/user-attachments/assets/9527249e-23c1-464d-b64d-8cfcf58a0d58" />
+<img width="855" height="444" alt="Скриншот 07-05-2026 183221" src="https://github.com/user-attachments/assets/8c68cb93-fee5-4557-b42b-33ba92dd2460" />
+<img width="756" height="294" alt="Скриншот 07-05-2026 182948" src="https://github.com/user-attachments/assets/2e8c7047-fc80-40b5-b671-f1dbdd5a0651" />
+<img width="1287" height="324" alt="Скриншот 07-05-2026 182337" src="https://github.com/user-attachments/assets/6b2ae0a6-c291-428f-9923-4ddc81476f1a" />
+<img width="1239" height="261" alt="Скриншот 07-05-2026 182111" src="https://github.com/user-attachments/assets/159993d9-0599-41b4-82bc-756d8bd436a9" />
+
+
+
+
+
+
