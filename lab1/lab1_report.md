@@ -1,14 +1,16 @@
-University: [ITMO University](https://itmo.ru/ru/)
-Faculty: [FICT](https://fict.itmo.ru)
-Course: [Cloud platforms as the basis of technology entrepreneurship](https://itmo-ict-faculty.github.io/cloud-platforms-as-the-basis-of-technology-entrepreneurship/)
-Year: 2025/2026
-Group: U4125
-Author: Popov Mark Alexandrovich
-Lab: Lab1
-Date of create: 07.05.2026
-Date of finished:
+# Lab 1
 
-# Лабораторная работа №1  
+University: [ITMO University](https://itmo.ru)  
+Faculty: [FICT](https://fict.itmo.ru)  
+Course:  Vibe Coding: AI-боты для бизнеса
+Year: 2025/2026  
+Author: Popov Mark  
+Lab: Lab2  
+Group: U4125
+Date of create: 09.04.2026  
+Date of finished: -  
+# Отчет по лабораторной работе №1
+  
 # Обзор Google Cloud и исследование основных сервисов
 
 ## Цель работы
