@@ -1,160 +1,248 @@
-University: [ITMO University](https://itmo.ru)  
-Faculty: [FICT](https://fict.itmo.ru)  
-Course: Vibe Coding: AI-боты для бизнеса  
-Year: 2025/2026  
-Group: U4125  
-Author: Popov Mark  
-Lab: Lab1  
-Date of create: 09.04.2026  
-Date of finished: -
-# Лабораторная работа №1
-# 1. Описание задачи
+University: [ITMO University](https://itmo.ru/ru/)
+Faculty: [FICT](https://fict.itmo.ru)
+Course: [Cloud platforms as the basis of technology entrepreneurship](https://itmo-ict-faculty.github.io/cloud-platforms-as-the-basis-of-technology-entrepreneurship/)
+Year: 2025/2026
+Group: U4125
+Author: Popov Mark Alexandrovich
+Lab: Lab1
+Date of create: 07.05.2026
+Date of finished:
 
-Необходимо было разработать Telegram-бота, который обрабатывает команды пользователя и предоставляет информацию в ответ на запросы.
+# Лабораторная работа №1  
+# Обзор Google Cloud и исследование основных сервисов
 
----
+## Цель работы
 
-# 2. Какую проблему решает бот
+Ознакомиться с основными возможностями и преимуществами облачной платформы Google Cloud.
 
-Бот упрощает доступ к информации (о команде, контактах, событиях) через удобный интерфейс Telegram без необходимости перехода на сайт.
+В рамках лабораторной работы были изучены сервисы IAM, Compute Engine и Cloud Storage, а также проверено влияние IAM-ролей service account на доступ к объектам в Cloud Storage.
 
----
+## Ход работы
 
-# 3. Почему выбрали именно эту задачу
+### 1. Проверка проекта Google Cloud
 
-Telegram-боты являются популярным инструментом автоматизации и широко применяются в бизнесе и сервисах. Задача позволяет получить практический опыт работы с API и взаимодействием с пользователем.
+В начале работы был открыт Google Cloud Console и выбран учебный проект:
 
----
-
-# 4. Промпт для LLM
-
-Создай Telegram-бота на Python с использованием python-telegram-bot. Реализуй команды: /start, /help, /about, /contacts, /team, /events. Используй .env для хранения токена.
-
----
-
-# 5. Исходный промпт
-
-Создай Telegram-бота на Python.
-
----
-
-# 6. Итерации и улучшения
-
-- Добавлена поддержка команд  
-- Добавлено использование `.env`  
-- Улучшена структура кода  
-- Добавлена обработка ошибок  
-
----
-
-# 7. Финальный промпт
-
-Создай Telegram-бота на Python с использованием python-telegram-bot.
-
-Нужно создать файлы в папке lab1:
-- bot.py
-- requirements.txt
-
-Функционал бота:
-- /start — приветствие и краткое описание
-- /help — список команд
-- /about — текст: "Мы учебная команда, занимаемся разработкой проектов"
-- /contacts — текст:
-  Руководитель: Иван Иванов — @ivanov
-  Менеджер: Анна Смирнова — @annasmirnova
-  Почта: team@example.com
-- /team — текст:
-  Иван Иванов — руководитель
-  Анна Смирнова — менеджер
-  Петр Петров — разработчик
-  Мария Соколова — дизайнер
-- /events — текст:
-  Планерка — понедельник 10:00
-  Дедлайн — пятница 18:00
-  Демонстрация проекта — среда 15:00
-
-Требования:
-- использовать TELEGRAM_BOT_TOKEN из файла .env
-- использовать python-dotenv
-- код должен быть простым и понятным
-- добавить комментарии
-- добавить базовую обработку ошибок
-- запуск через python bot.py
-- современная версия python-telegram-bot
-
----
-
-# 8. Стек технологий
-
-- Python  
-- Telegram Bot API  
-- python-telegram-bot  
-- python-dotenv  
-
----
-
-# 9. Используемые библиотеки
-
-- python-telegram-bot — для работы с Telegram API  
-- python-dotenv — для загрузки переменных окружения  
-
----
-
-# 10. Почему выбраны эти библиотеки
-
-Библиотека python-telegram-bot предоставляет удобный интерфейс для работы с Telegram API, а python-dotenv позволяет безопасно хранить токен.
-
----
-
-# 11. Скриншоты и видео
-
-<img width="367" height="964" alt="image" src="https://github.com/user-attachments/assets/b7bc44a7-c4b6-45a1-82e2-04893696667a" />
-
-<img width="524" height="931" alt="image" src="https://github.com/user-attachments/assets/70b904e0-d57d-4e2b-82c4-34149dc8b68f" />
+```text
+cloud-platforms-as-the-basis
+Для проверки активного проекта в Cloud Shell была выполнена команда:
+gcloud config get-value project
+Результат:
+cloud-platforms-as-the-basis
 
 
+⸻
 
----
 
-## Видео-демо
+2. Создание service account
+Был создан service account с именем:
+mpopov-sa-lab1
+Команда создания:
+gcloud iam service-accounts create mpopov-sa-lab1 \
+  --display-name="Mark Popov Lab1 Service Account"
+После создания service account был проверен командой:
+gcloud iam service-accounts list --filter="email:mpopov-sa-lab1"
+Результат:
+DISPLAY NAME: Mark Popov Lab1 Service Account
+EMAIL: mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+DISABLED: False
 
-ссылка на видео: https://drive.google.com/file/d/1735O3ppmibdtdj3SZ5EG9yekLVMm_9oG/view?usp=drivesdk
 
----
+⸻
 
-# 12. Трудности и решения
 
-## 13. Проблемы
+3. Назначение роли Storage Admin
+Созданному service account была назначена роль Storage Admin.
+Команда:
+gcloud projects add-iam-policy-binding cloud-platforms-as-the-basis \
+  --member="serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com" \
+  --role="roles/storage.admin"
+Для проверки была выполнена команда:
+gcloud projects get-iam-policy cloud-platforms-as-the-basis \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:mpopov-sa-lab1 AND bindings.role:roles/storage.admin" \
+  --format="table(bindings.role, bindings.members)"
+Результат:
+ROLE: roles/storage.admin
+MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
 
-- Ошибка с .env (не находился токен)  
-- Ошибка с путями в терминале  
-- Проблема с установкой зависимостей  
 
-## 14. Решения
+⸻
 
-- Исправлено имя переменной на TELEGRAM_BOT_TOKEN  
-- Использован правильный путь к папке  
-- Установлены зависимости через pip  
 
----
+4. Создание виртуальной машины Compute Engine
+Была создана виртуальная машина с именем:
+mpopov-vm-lab1
+Параметры виртуальной машины:
+Zone: europe-west1-b
+Machine type: e2-micro
+Provisioning model: SPOT
+Image family: debian-12
+Service account: mpopov-sa-lab1
+Команда создания:
+gcloud compute instances create mpopov-vm-lab1 \
+  --zone=europe-west1-b \
+  --machine-type=e2-micro \
+  --provisioning-model=SPOT \
+  --instance-termination-action=STOP \
+  --service-account=mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com \
+  --scopes=https://www.googleapis.com/auth/cloud-platform \
+  --image-family=debian-12 \
+  --image-project=debian-cloud
+После создания виртуальная машина была проверена командой:
+gcloud compute instances list --filter="name=mpopov-vm-lab1"
+Результат:
+NAME: mpopov-vm-lab1
+ZONE: europe-west1-b
+MACHINE_TYPE: e2-micro
+PREEMPTIBLE: true
+STATUS: RUNNING
 
-# 15. Выводы
 
-## 16. Что получилось хорошо
+⸻
 
-- Бот успешно работает  
-- Реализованы команды  
-- Корректно подключен Telegram API  
 
-## 17. Что можно улучшить
+5. Подключение к виртуальной машине
+Для подключения к виртуальной машине была использована команда:
+gcloud compute ssh mpopov-vm-lab1 --zone=europe-west1-b
+После подключения была выполнена проверка имени хоста:
+hostname
+Результат:
+mpopov-vm-lab1
+Также была проверена учетная запись, от имени которой выполняются команды внутри VM:
+gcloud config get-value account
+Результат:
+mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+Дополнительно была выполнена команда:
+gcloud auth list
+Результат показал, что активной учетной записью является созданный service account:
+ACTIVE  ACCOUNT
+*       mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
 
-- Добавить кнопки (inline keyboard)  
-- Добавить обработку текста без команд  
-- Улучшить UX  
 
-## 18. Чему научились
+⸻
 
-- Работе с Telegram API  
-- Созданию ботов на Python  
-- Использованию .env  
-- Работе с библиотеками и зависимостями
+
+Конечно. Вот текст с 6 пункта и до конца:
+### 6. Копирование файлов из Cloud Storage при роли Storage Admin
+
+Внутри виртуальной машины был проверен доступ к bucket:
+
+```bash
+gsutil ls gs://lab1-bucket-itmo
+Результат:
+gs://lab1-bucket-itmo/pic1.jpg
+gs://lab1-bucket-itmo/pic2.jpg
+gs://lab1-bucket-itmo/pic3.jpeg
+Затем была создана локальная папка:
+mkdir lab1-files
+После этого файлы были скопированы из bucket на виртуальную машину:
+gsutil cp gs://lab1-bucket-itmo/* ./lab1-files/
+Результат:
+Copying gs://lab1-bucket-itmo/pic1.jpg...
+Copying gs://lab1-bucket-itmo/pic2.jpg...
+Copying gs://lab1-bucket-itmo/pic3.jpeg...
+Operation completed over 3 objects/1.5 MiB.
+Проверка содержимого папки:
+ls -la lab1-files
+Результат:
+pic1.jpg
+pic2.jpg
+pic3.jpeg
+Таким образом, при наличии роли Storage Admin service account успешно получил доступ к bucket и смог скопировать файлы на виртуальную машину.
+
+
+⸻
+
+
+7. Изменение роли service account
+После успешного копирования файлов роль Storage Admin была удалена у service account.
+Команда:
+gcloud projects remove-iam-policy-binding cloud-platforms-as-the-basis \
+  --member="serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com" \
+  --role="roles/storage.admin"
+Затем service account была назначена роль Compute Viewer:
+gcloud projects add-iam-policy-binding cloud-platforms-as-the-basis \
+  --member="serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com" \
+  --role="roles/compute.viewer"
+Для проверки новой роли была выполнена команда:
+gcloud projects get-iam-policy cloud-platforms-as-the-basis \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:mpopov-sa-lab1 AND bindings.role:roles/compute.viewer" \
+  --format="table(bindings.role, bindings.members)"
+Результат:
+ROLE: roles/compute.viewer
+MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+
+
+⸻
+
+
+8. Повторное копирование файлов после смены роли
+После смены роли было выполнено повторное подключение к виртуальной машине:
+gcloud compute ssh mpopov-vm-lab1 --zone=europe-west1-b
+На виртуальной машине была создана новая папка:
+mkdir lab1-files-after-role-change
+После этого была выполнена повторная проверка bucket:
+gsutil ls gs://lab1-bucket-itmo
+Результат:
+gs://lab1-bucket-itmo/pic1.jpg
+gs://lab1-bucket-itmo/pic2.jpg
+gs://lab1-bucket-itmo/pic3.jpeg
+Затем была выполнена команда копирования:
+gsutil cp gs://lab1-bucket-itmo/* ./lab1-files-after-role-change/
+Результат:
+Copying gs://lab1-bucket-itmo/pic1.jpg...
+Copying gs://lab1-bucket-itmo/pic2.jpg...
+Copying gs://lab1-bucket-itmo/pic3.jpeg...
+Operation completed over 3 objects/1.5 MiB.
+Так как копирование после смены роли тоже завершилось успешно, была выполнена дополнительная проверка ролей service account:
+gcloud projects get-iam-policy cloud-platforms-as-the-basis \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:mpopov-sa-lab1" \
+  --format="table(bindings.role, bindings.members)"
+Результат:
+ROLE: roles/compute.viewer
+MEMBERS: serviceAccount:mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+Это подтвердило, что роль Storage Admin действительно была удалена, а у service account осталась роль Compute Viewer.
+Также была проверена IAM policy bucket:
+gcloud storage buckets get-iam-policy gs://lab1-bucket-itmo
+В результате была найдена следующая запись:
+members:
+- allUsers
+role: roles/storage.objectViewer
+Это означает, что объекты в bucket доступны для чтения всем пользователям. Поэтому после смены роли service account с Storage Admin на Compute Viewer доступ к объектам Cloud Storage не был потерян.
+
+
+⸻
+
+
+9. Удаление созданных ресурсов
+После завершения лабораторной работы была удалена виртуальная машина:
+gcloud compute instances delete mpopov-vm-lab1 --zone=europe-west1-b
+Проверка удаления:
+gcloud compute instances list --filter="name=mpopov-vm-lab1"
+Результат:
+Listed 0 items.
+Затем был удален service account:
+gcloud iam service-accounts delete mpopov-sa-lab1@cloud-platforms-as-the-basis.iam.gserviceaccount.com
+Проверка удаления:
+gcloud iam service-accounts list --filter="email:mpopov-sa-lab1"
+Результат:
+Listed 0 items.
+
+
+⸻
+
+
+Вывод
+В ходе лабораторной работы были изучены базовые сервисы Google Cloud: IAM, Compute Engine и Cloud Storage.
+Был создан service account mpopov-sa-lab1, которому сначала была назначена роль Storage Admin. Затем была создана виртуальная машина mpopov-vm-lab1 типа e2-micro в режиме Spot. Виртуальная машина была запущена с использованием созданного service account.
+При наличии роли Storage Admin удалось получить список объектов bucket lab1-bucket-itmo и скопировать три файла на виртуальную машину с помощью утилиты gsutil.
+После этого роль Storage Admin была удалена, а вместо нее была назначена роль Compute Viewer. Ожидалось, что после смены роли service account потеряет доступ к объектам Cloud Storage, так как роль Compute Viewer относится к просмотру ресурсов Compute Engine и не предоставляет прав на чтение объектов Cloud Storage.
+Однако повторное выполнение команд gsutil ls и gsutil cp также завершилось успешно. Для поиска причины была проверена IAM policy bucket lab1-bucket-itmo. В политике доступа была обнаружена запись:
+members:
+- allUsers
+role: roles/storage.objectViewer
+Это означает, что bucket доступен для чтения всем пользователям. Следовательно, доступ к объектам bucket предоставлялся не только через роль Storage Admin, назначенную service account, но и через публичную политику bucket. Именно поэтому после смены роли на Compute Viewer копирование файлов продолжило работать.
+В конце лабораторной работы все созданные ресурсы — виртуальная машина и service account — были удалены.
