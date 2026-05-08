@@ -264,19 +264,35 @@ role: roles/storage.objectViewer
 ### Скрины
 <img width="1214" height="294" alt="Скриншот 07-05-2026 181934" src="https://github.com/user-attachments/assets/076ea7ce-3b1b-4754-b853-ceda5dc2d676" />
 
+
+
 <img width="905" height="57" alt="Скриншот 07-05-2026 183534" src="https://github.com/user-attachments/assets/44b6f614-1666-4916-902e-cf4c2cf6dedb" />
+
+
 
 <img width="1223" height="190" alt="Скриншот 07-05-2026 185001" src="https://github.com/user-attachments/assets/8d978061-17f1-4b06-93c0-a37f36c35c68" />
 
+
+
 <img width="1205" height="257" alt="Скриншот 07-05-2026 184851" src="https://github.com/user-attachments/assets/8a8a9e20-0e94-4efb-8323-fe1db5b507e5" />
+
+
 
 <img width="851" height="583" alt="Скриншот 07-05-2026 184649" src="https://github.com/user-attachments/assets/9527249e-23c1-464d-b64d-8cfcf58a0d58" />
 
+
+
 <img width="855" height="444" alt="Скриншот 07-05-2026 183221" src="https://github.com/user-attachments/assets/8c68cb93-fee5-4557-b42b-33ba92dd2460" />
+
+
 
 <img width="756" height="294" alt="Скриншот 07-05-2026 182948" src="https://github.com/user-attachments/assets/2e8c7047-fc80-40b5-b671-f1dbdd5a0651" />
 
+
+
 <img width="1287" height="324" alt="Скриншот 07-05-2026 182337" src="https://github.com/user-attachments/assets/6b2ae0a6-c291-428f-9923-4ddc81476f1a" />
+
+
 
 <img width="1239" height="261" alt="Скриншот 07-05-2026 182111" src="https://github.com/user-attachments/assets/159993d9-0599-41b4-82bc-756d8bd436a9" />
 
